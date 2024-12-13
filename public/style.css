@@ -45,6 +45,7 @@ input:active{
 .notice {
     position: relative;
     margin: 1em;
+    width: 350px;
     display: none;
     background: #F9F9F9;
     padding: 1em 1em 1em 2em;
