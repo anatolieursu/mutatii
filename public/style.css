@@ -1,0 +1,35 @@
+body{
+    margin: 0;
+    overflow: hidden;
+    background-color: black;
+}
+
+.caracters{
+    position: absolute;
+    background-color: white;
+    width: 160px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+}
+
+input{
+    font-size: 17px;
+    outline: none;
+    border: 1px solid black;
+    padding: 2px;
+}
+input:active{
+    outline: none;
+}
+.sb{
+    margin-left: 5px;
+    background-color: transparent;
+    border: 1px solid black;
+
+}
+.sb:active{
+    border: 2px solid black;
+}
