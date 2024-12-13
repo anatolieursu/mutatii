@@ -1,0 +1,8 @@
+{
+  "framework": null,
+  "settings": {
+    "buildCommand": "npm run build",
+    "outputDirectory": "dist",
+    "nodeVersion": "18.x"
+  }
+}
