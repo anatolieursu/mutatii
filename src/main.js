@@ -3,6 +3,13 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
+import {createLysosomes} from "./components/lizozomi";
+import {createMitochondrion} from "./components/mitocondria";
+import {createNucleus} from "./components/nucleus";
+import {createEndoplasmicReticulum} from "./components/endoplasmatic_reticulum";
+import {createGolgiApparatus} from "./components/ag";
+import {createRibosomes} from "./components/ribosomes";
+import {createHollowSphere} from "./components/hollow_sphere";
 
 let group, camera, scene, renderer, ngroup, hollowCell;
 
@@ -60,11 +67,11 @@ export function init() {
 
     // ambient light
 
-    scene.add( new THREE.AmbientLight( 0x666666 ) );
+    scene.add( new THREE.AmbientLight( 0xFFFF00 ) );
 
     // point light
 
-    const light = new THREE.PointLight( 0xffffff, 3, 0, 0 );
+    const light = new THREE.PointLight( 0xffffff, 2.5, 0, 0 );
     camera.add( light );
 
     // helper
@@ -190,153 +197,10 @@ export function basic_cell(){
     // nucleu
     ngroup.add(createNucleus())
 }
-function createLysosomes(group, count, minPosition, maxPosition) {
-    const lysosomeGeometry = new THREE.SphereGeometry(0.2, 16, 16); // Lizozomi mai mari decât ribozomii
-    const lysosomeMaterial = new THREE.MeshLambertMaterial({ color: 0xffcc00 });
 
-    for (let i = 0; i < count; i++) {
-        const lysosome = new THREE.Mesh(lysosomeGeometry, lysosomeMaterial);
-
-        // Setează o poziție aleatorie pentru fiecare lizozom
-        lysosome.position.set(
-            THREE.MathUtils.randFloat(minPosition.x, maxPosition.x),
-            THREE.MathUtils.randFloat(minPosition.y, maxPosition.y),
-            THREE.MathUtils.randFloat(minPosition.z, maxPosition.z)
-        );
-
-        // Adaugă lizozomul la grupul principal
-        group.add(lysosome);
-    }
-}
 function getRandomFloat(min, max) {
     return Math.random() * (max - min) + min;
 }
-
-function createNucleus() {
-    const nucleusGeometry = new THREE.SphereGeometry(3);
-    const nucleusMaterial = new THREE.MeshLambertMaterial({ color: 0xff0000, opacity: 0.5 });
-    return new THREE.Mesh(nucleusGeometry, nucleusMaterial);
-}
-function createMitochondrion(x, y, z, color = 0xffa500) {
-    const mitochondrionGeometry = new THREE.SphereGeometry(0.1, 10, 10);
-    const mitochondrionMaterial = new THREE.MeshLambertMaterial({ color: 0xffa500 });
-
-    const mitochondrion = new THREE.Mesh(mitochondrionGeometry, mitochondrionMaterial);
-
-    mitochondrion.scale.set(1, 1, 2);
-
-    mitochondrion.position.set(x, y, z);
-
-    return mitochondrion;
-}
-function createEndoplasmicReticulum() {
-    const material = new THREE.MeshLambertMaterial({ color: 0x00ff7f, side: THREE.DoubleSide });
-
-    class CustomSinCurve extends THREE.Curve {
-        constructor(scale) {
-            super();
-            this.scale = scale;
-        }
-
-        getPoint(t) {
-            const tx = Math.sin(2 * Math.PI * t) * this.scale;
-            const ty = Math.cos(4 * Math.PI * t) * this.scale * 0.5;
-            const tz = t * this.scale * 5 - this.scale * 2.5; // Lungime pe axa Z
-            return new THREE.Vector3(tx, ty, tz);
-        }
-    }
-
-    const path = new CustomSinCurve(2);
-    const geometry = new THREE.TubeGeometry(path, 10, data.re.radius, 4, false);
-
-    const reticulumMesh = new THREE.Mesh(geometry, material);
-
-    const group = new THREE.Group();
-    group.add(reticulumMesh);
-
-    const numBranches = 20;
-    for (let i = 0; i < numBranches; i++) {
-        const branch = reticulumMesh.clone();
-
-        const scale = Math.random() * 0.6 + 0.4;
-        branch.scale.set(scale, scale, scale);
-
-        branch.position.set(
-            Math.random() * 10 - 5,
-            Math.random() * 5 - 2.5,
-            Math.random() * 5 - 2.5
-        );
-
-        branch.rotation.set(
-            Math.random() * Math.PI,
-            Math.random() * Math.PI,
-            Math.random() * Math.PI
-        );
-
-        group.add(branch);
-    }
-
-    return group;
-}
-
-function createGolgiApparatus() {
-    const material = new THREE.MeshLambertMaterial({ color: 0xffd700, side: THREE.DoubleSide });
-
-    const group = new THREE.Group();
-
-    const numCisternae = data.ag.numCisterne;
-    const initialRadius = 0.15;
-    const tubeRadius = 0.2;
-    const separation = 0.2;
-
-    for (let i = 0; i < numCisternae; i++) {
-        const radius = initialRadius + i * 0.5;
-        const geometry = new THREE.TorusGeometry(radius, tubeRadius, 16, 100, Math.PI);
-        const mesh = new THREE.Mesh(geometry, material);
-
-        mesh.rotation.x = Math.PI / 2;
-        mesh.position.y = i * separation;
-
-        group.add(mesh);
-    }
-    group.position.set(1, 0, 0);
-
-    return group;
-}
-
-function createRibosomes(group, count, minPosition, maxPosition) {
-    const ribosomeGeometry = new THREE.SphereGeometry(0.1, 15, 15);
-    const ribosomeMaterial = new THREE.MeshLambertMaterial({ color: 0x808080 });
-
-    for (let i = 0; i < count; i++) {
-        const ribosome = new THREE.Mesh(ribosomeGeometry, ribosomeMaterial);
-
-        ribosome.position.set(
-            THREE.MathUtils.randFloat(minPosition.x, maxPosition.x),
-            THREE.MathUtils.randFloat(minPosition.y, maxPosition.y),
-            THREE.MathUtils.randFloat(minPosition.z, maxPosition.z)
-        );
-
-        group.add(ribosome);
-    }
-}
-
-function createHollowSphere(radius, thickness, material) {
-    const outerSphereGeometry = new THREE.SphereGeometry(radius, 32, 32);
-    const outerSphere = new THREE.Mesh(outerSphereGeometry, material);
-
-    const innerSphereGeometry = new THREE.SphereGeometry(radius - thickness, 32, 32);
-    const innerMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.BackSide });
-    const innerSphere = new THREE.Mesh(innerSphereGeometry, innerMaterial);
-
-    const hollowSphere = new THREE.Group();
-    hollowSphere.add(outerSphere);
-    hollowSphere.add(innerSphere);
-
-    return hollowSphere;
-}
-
-
 
 function onWindowResize() {
 
@@ -348,10 +212,16 @@ function onWindowResize() {
 }
 
 function animate() {
-
     group.rotation.y += 0.005;
     if (ngroup) {
-        ngroup.rotation.y += 0.005
+        ngroup.rotation.y += 0.005;
+
+        const center = new THREE.Vector3(0, 0, 0);
+        const radius = Cell_Radius - data.membrana.grosime;
+
+        ngroup.children.forEach((child) => {
+            child.visible = isInsideSphere(child, center, radius);
+        });
     }
 
     renderer.render(scene, camera);
@@ -367,4 +237,9 @@ export function deleteCell() {
 }
 function getGeometryByID(id) {
     return geometries[id] || null;
+}
+
+function isInsideSphere(object, center, radius) {
+    const distance = object.position.distanceTo(center);
+    return distance <= radius;
 }

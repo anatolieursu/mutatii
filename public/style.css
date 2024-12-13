@@ -13,6 +13,7 @@ body{
     justify-content: center;
     align-items: center;
     font-size: 14px;
+    margin: 0;
 }
 
 input{
@@ -32,4 +33,10 @@ input:active{
 }
 .sb:active{
     border: 2px solid black;
+}
+
+.info_about_cell{
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid black;
 }

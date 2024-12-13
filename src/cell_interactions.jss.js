@@ -42,14 +42,10 @@ info.forEach(e => {
 
 
 
-// -=-=-=-=-=
-
 const OPENAI_KEY = "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";
-document.getElementById("caracters_form").addEventListener("submit", async (e) => {
-    e.preventDefault();  // Prevent the form from submitting and reloading the page
-
-    const inputC = document.getElementById("caracters").value;
-
+// Form submit
+document.getElementById("info_about_cell_form").addEventListener("submit", async (e) => {
+    e.preventDefault();
     const request = new Request("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -76,4 +72,6 @@ document.getElementById("caracters_form").addEventListener("submit", async (e) =
     } catch (error) {
         console.error('Error fetching data:', error);
     }
-});
+})
+
+// -=-=-=-=-=
